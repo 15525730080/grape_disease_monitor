@@ -69,9 +69,9 @@ class EnsembleGrapeDiseaseClassifier:
         probabilities = np.max(avg_predictions, axis=1)
 
         print(f"Predicted class: {self.label_mapping[str(predicted_class[0])]}")
-        print(f"Class probabilities: {probabilities[0]}", image_path)
+        print(f"Class probabilities: {probabilities[0] * 100} %", image_path)
 
-        return predicted_class
+        return predicted_class, float(probabilities[0] * 100)
 
 
 ensemble_classifier = EnsembleGrapeDiseaseClassifier(
@@ -84,4 +84,4 @@ def ensemble_predict(img_path):
 
 
 if __name__ == '__main__':
-    ensemble_predict(r"E:\postgraduatecode\grape_disease_monitor\img\trains\白粉病\6235844fd7561b594fb68e3b.jpg")
+    ensemble_predict(r"C:\Users\hp\Downloads\bfdb834db1c8027a53d2c4c80a43216f.jpg")
