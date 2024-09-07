@@ -38,7 +38,7 @@ class EnsembleGrapeDiseaseClassifier:
             resized_preds.append(padded_pred)
         return resized_preds
 
-    def predict(self, image_path):
+    def predict(self, image_path) -> tuple[str, float]:
         image = Image.open(image_path).convert("RGB")
         image = image.resize((224, 224))
         image_array = np.array(image, dtype=np.float32)
