@@ -1,3 +1,6 @@
+from io import BytesIO
+from pathlib import Path
+
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -12,7 +15,7 @@ class EnsembleGrapeDiseaseClassifier:
         self.models = [tf.keras.models.load_model(path) for path in model_paths]
 
         # 假设label_mapping是相同的
-        with open("label_mapping.json", "r") as json_file:
+        with open(Path(__file__).parent.joinpath("label_mapping.json").resolve(), "r") as json_file:
             self.label_mapping = json.loads(json_file.read())
 
     def preprocess_image(self, image_path):
@@ -75,13 +78,10 @@ class EnsembleGrapeDiseaseClassifier:
 
 
 ensemble_classifier = EnsembleGrapeDiseaseClassifier(
-    ["grape_disease_model_20240831.keras", "grape_disease_model_20240901.keras"])
+    [Path(__file__).parent.joinpath("grape_disease_model_20240831.keras").resolve(),
+     Path(__file__).parent.joinpath("grape_disease_model_20240901.keras").resolve()])
 
 
-def ensemble_predict(img_path):
+def ensemble_predict(img_path: BytesIO) -> tuple[str, float]:
     # 使用模型集成进行预测
     return ensemble_classifier.predict(img_path)
-
-
-if __name__ == '__main__':
-    ensemble_predict(r"C:\Users\hp\Downloads\bfdb834db1c8027a53d2c4c80a43216f.jpg")
