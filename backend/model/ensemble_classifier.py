@@ -54,7 +54,7 @@ class EnsembleGrapeDiseaseClassifier:
         for model_path in self.model_paths:
             model = tf.keras.models.load_model(model_path)
             pred = model.predict(image_array)
-            print(f"Model prediction shape: {pred.shape}")
+            print(f"{model_path} Model prediction shape: {pred.shape}")
             all_predictions.append(pred)
             if num_classes is None:
                 num_classes = pred.shape[1]
@@ -72,14 +72,17 @@ class EnsembleGrapeDiseaseClassifier:
         probabilities = np.max(avg_predictions, axis=1)
 
         print(f"Predicted class: {self.label_mapping[str(predicted_class[0])]}")
-        print(f"Class probabilities: {probabilities[0] * 100} %", image_path)
+        print(f"Class probabilities: {probabilities[0] * 100} %")
 
         return predicted_class, float(probabilities[0] * 100)
 
 
 ensemble_classifier = EnsembleGrapeDiseaseClassifier(
-    [Path(__file__).parent.joinpath("grape_disease_model_20240831.keras").resolve(),
-     Path(__file__).parent.joinpath("grape_disease_model_20240901.keras").resolve()])
+    [
+        Path(__file__).parent.joinpath("grape_disease_model_20240831.keras").resolve(),
+        Path(__file__).parent.joinpath("grape_disease_model_20240901.keras").resolve(),
+        Path(__file__).parent.joinpath("grape_disease_model_20240914_rnn.keras").resolve()
+    ])
 
 
 def ensemble_predict(img_path: BytesIO) -> tuple[str, float]:
