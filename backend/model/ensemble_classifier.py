@@ -81,11 +81,24 @@ ensemble_classifier = EnsembleGrapeDiseaseClassifier(
     [
         Path(__file__).parent.joinpath("grape_disease_model_20240831.keras").resolve(),
         Path(__file__).parent.joinpath("grape_disease_model_20240901.keras").resolve(),
-        Path(__file__).parent.joinpath("grape_disease_model_20240914_rnn.keras").resolve()
+        Path(__file__).parent.joinpath("grape_disease_model_20240914_rnn.keras").resolve(),
+        Path(__file__).parent.joinpath("grape_disease_model_20240922_mobilenet_v2.keras").resolve()
     ])
 
 
-def ensemble_predict(img_path: BytesIO) -> tuple[str, float]:
+def ensemble_predict(img_path: BytesIO | str) -> tuple[str, float]:
     # 使用模型集成进行预测
     return ensemble_classifier.predict(img_path)
 
+#
+# if __name__ == '__main__':
+#     test_image_paths = [
+#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\溃疡病\6235845bd7561b594fb696e2.jpg",
+#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\灰霉病\62358460d7561b594fb69a0a.jpg",
+#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\酸腐病\6235844ed7561b594fb68da2.jpg",
+#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\黑霉病\6235844dd7561b594fb68ca3.jpg",
+#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\白粉病\6235844fd7561b594fb68e1f.jpg"
+#     ]
+#
+#     for path in test_image_paths:
+#         print(ensemble_predict(path), path)
