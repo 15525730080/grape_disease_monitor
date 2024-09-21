@@ -81,7 +81,7 @@ ensemble_classifier = EnsembleGrapeDiseaseClassifier(
     [
         Path(__file__).parent.joinpath("grape_disease_model_20240831.keras").resolve(),
         Path(__file__).parent.joinpath("grape_disease_model_20240901.keras").resolve(),
-        Path(__file__).parent.joinpath("grape_disease_model_20240914_rnn.keras").resolve(),
+        # Path(__file__).parent.joinpath("grape_disease_model_20240914_rnn.keras").resolve(),
         Path(__file__).parent.joinpath("grape_disease_model_20240922_mobilenet_v2.keras").resolve()
     ])
 
