@@ -88,3 +88,4 @@ ensemble_classifier = EnsembleGrapeDiseaseClassifier(
 def ensemble_predict(img_path: BytesIO) -> tuple[str, float]:
     # 使用模型集成进行预测
     return ensemble_classifier.predict(img_path)
+

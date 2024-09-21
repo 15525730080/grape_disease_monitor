@@ -125,17 +125,17 @@ class GrapeDiseaseClassifier:
 
 # if __name__ == "__main__":
 #     data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"
-#     model_path = "grape_disease_modelaZX"
+#     model_path = "grape_disease_model_20240831"
 #     classifier = GrapeDiseaseClassifier(data_folder, model_path)
 #     classifier.train_model(epochs=50)
 #
-#     test_image_paths = [
-#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\溃疡病\6235845bd7561b594fb696e2.jpg",
-#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\灰霉病\62358460d7561b594fb69a0a.jpg",
-#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\酸腐病\6235844ed7561b594fb68da2.jpg",
-#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\黑霉病\6235844dd7561b594fb68ca3.jpg",
-#         r"E:\postgraduatecode\grape_disease_monitor\img\trains\白粉病\6235844fd7561b594fb68e1f.jpg"
-#     ]
+    # test_image_paths = [
+    #     r"E:\postgraduatecode\grape_disease_monitor\img\trains\溃疡病\6235845bd7561b594fb696e2.jpg",
+    #     r"E:\postgraduatecode\grape_disease_monitor\img\trains\灰霉病\62358460d7561b594fb69a0a.jpg",
+    #     r"E:\postgraduatecode\grape_disease_monitor\img\trains\酸腐病\6235844ed7561b594fb68da2.jpg",
+    #     r"E:\postgraduatecode\grape_disease_monitor\img\trains\黑霉病\6235844dd7561b594fb68ca3.jpg",
+    #     r"E:\postgraduatecode\grape_disease_monitor\img\trains\白粉病\6235844fd7561b594fb68e1f.jpg"
+    # ]
 #
 #     for path in test_image_paths:
 #         classifier.predict(path)
