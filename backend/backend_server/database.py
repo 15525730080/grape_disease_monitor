@@ -1,5 +1,7 @@
 import asyncio
 import os
+
+from sqlalchemy import *
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from contextlib import asynccontextmanager
@@ -42,6 +44,25 @@ async def update_table_structure():
 
 async def create_table():
     await update_table_structure()
+
+
+class Task(Base, SerializerMixin):
+    __tablename__ = 'tasks'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    start_time = Column(DateTime, default=None)
+    end_time = Column(DateTime, default=None)
+    status = Column(Integer)  # 0未开始, 1 执行中 , 2 执行完成
+    file_dir = Column(String(255), default=None)  # 存储img文件的路径
+    name = Column(String(255), default=None)  # 任务名称
+    position = Column(String(255), default=None)  # 当前任务所处园区
+
+class User(Base, SerializerMixin):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), default=None)  # 用户名称
+    username = Column(String(255), default=None)  # 登录账号
+    password = Column(String(255), default=None)  # 登录密码
+    token = Column(String(255), default=None)  # 登录密码
 
 
 asyncio.run(create_table())

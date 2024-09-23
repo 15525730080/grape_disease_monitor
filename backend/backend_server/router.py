@@ -1,5 +1,7 @@
 import traceback
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from starlette.responses import RedirectResponse
+
 from backend.backend_server.video_control.video_handle import video_image_handler
 from backend.backend_server.log import log as logger
 router = APIRouter()
@@ -16,3 +18,7 @@ async def websocket_endpoint(websocket: WebSocket):
         logger.error(traceback.print_exc())
 
 
+
+@router.get("/")
+def index():
+    return RedirectResponse(url="/static/index.html")
