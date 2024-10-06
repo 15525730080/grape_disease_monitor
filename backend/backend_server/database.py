@@ -1,9 +1,9 @@
 import asyncio
+import datetime
 import os
-
 from sqlalchemy import *
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from contextlib import asynccontextmanager
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import declarative_base
@@ -67,11 +67,33 @@ class User(Base, SerializerMixin):
     token = Column(String(255), default=None)  # 登录密码
 
 
-class UserCollection(object):
+class UserCRUD(object):
+    @classmethod
+    async def get_all_user(cls):
+        async with async_connect() as session:
+            session: Session
+            async with session.begin():
+                result = await session.execute(select(User))
+                all_user = result.scalars().fetchall()
+                result_list = [u.to_dict() for u in all_user]
+                return result_list
 
+    @classmethod
+    async def insert_item_user(cls):
+        async with async_connect() as session:
+            session: Session
+            async with session.begin():
+                result = await session.add(User())
+                all_user = result.scalars().fetchall()
+                result_list = [u.to_dict() for u in all_user]
+                return result_list
+
+
+class TaskCRUD(object):
     @classmethod
     async def set_task_running(cls, task_id, monitor_pid):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task).filter(Task.id == task_id))
                 task = result.scalars().first()
@@ -84,6 +106,7 @@ class UserCollection(object):
     @classmethod
     async def get_all_task(cls):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task))
                 task = result.scalars().fetchall()
@@ -94,6 +117,7 @@ class UserCollection(object):
     @classmethod
     async def get_item_task(cls, task_id):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task).filter(Task.id == task_id))
                 task = result.scalars().first()
@@ -101,16 +125,9 @@ class UserCollection(object):
                 return task.to_dict()
 
     @classmethod
-    async def get_all_stop_task_monitor_pid(cls):
-        async with async_connect() as session:
-            async with session.begin():
-                result = await session.execute(select(Task).filter(Task.status == 2))
-                tasks = result.scalars().fetchall()
-                return [task.monitor_pid for task in tasks]
-
-    @classmethod
     async def stop_task(cls, task_id):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task).filter(Task.id == task_id))
                 task = result.scalars().first()
@@ -123,6 +140,7 @@ class UserCollection(object):
     @classmethod
     async def delete_task(cls, task_id):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task).filter(Task.id == task_id))
                 task = result.scalars().first()
@@ -135,6 +153,7 @@ class UserCollection(object):
     @classmethod
     async def change_task_name(cls, task_id, new_name):
         async with async_connect() as session:
+            session: Session
             async with session.begin():
                 result = await session.execute(select(Task).filter(Task.id == task_id))
                 task = result.scalars().first()
