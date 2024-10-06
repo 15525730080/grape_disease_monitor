@@ -4,10 +4,23 @@ import jwt
 
 from backend.backend_server.config import JWT_KEY
 from backend.backend_server.log import log as logger
+from backend.backend_server.util.error_enum import BusinessEnum
+
+__all__ = ["create_account", "verify_account"]
 
 
-def gen_jwt(item_dict: dict):
-    assert item_dict, "非法参数 {0}".format(item_dict)
+
+def _jwt2value(item_jwt: str):
+    if item_jwt:
+        return {}
+    decoded: dict = jwt.decode(item_jwt, JWT_KEY, algorithms=["HS256"])
+    logger.info("jwt {0} -> decoded value {1}".format(item_jwt, decoded))
+    return decoded
+
+
+def create_account(item_dict: dict):
+    assert item_dict, "item_dict {0}".format(BusinessEnum.ERROR_ARGV)
+    assert item_dict["user_name"], "item_dict.user_name {0}".format(BusinessEnum.ERROR_ARGV)
     item_dict["gen_time"] = time.time()
     seven_days_seconds = 7 * 24 * 3600
     item_dict["expiration_time"] = time.time() + seven_days_seconds
@@ -16,14 +29,15 @@ def gen_jwt(item_dict: dict):
     return encoded
 
 
-def jwt2value(item_jwt: dict):
-    decoded = jwt.decode(item_jwt, JWT_KEY, algorithms=["HS256"])
-    logger.info("jwt {0} -> decoded value {1}".format(item_jwt, decoded))
-
-
-def verify_account(item_dict: dict):
-    token_value = gen_jwt(item_dict)
+def verify_account(str_encoded_token: str):
+    token_value = _jwt2value(str_encoded_token)
     cur_time = time.time()
-    if not token_value or not token_value.get("expiration_time") or token_value.get("expiration_time") > cur_time:
+    if not token_value or not token_value.get("expiration_time") or token_value.get("expiration_time") > cur_time or not token_value.get("user_name"):
         return False
-    return True
+    return token_value.get("user_name")
+
+def logout_account(str_encoded_token: str):
+    token_value = _jwt2value(str_encoded_token)
+    cur_time = time.time()
+    token_value["expiration_time"] = cur_time - 1
+    return jwt.encode(token_value, JWT_KEY, algorithm="HS256")

@@ -5,6 +5,7 @@ from threading import Thread
 from backend.backend_server.config import BASE_MESSAGE_QUEUE
 from backend.model.ensemble_classifier import ensemble_predict
 from backend.backend_server.log import log as logger
+
 __all__ = ["video_image_handler"]
 
 
@@ -35,6 +36,7 @@ class VideoImageHandler(object):
                 except:
                     logger.error(traceback.print_exc())
                     time.sleep(3)
+
         Thread(target=func).start()
 
 

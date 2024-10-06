@@ -42,6 +42,7 @@ async def update_table_structure():
         # 反射现有的数据库结构
         await conn.run_sync(Base.metadata.create_all)
 
+
 async def create_table():
     await update_table_structure()
 
@@ -56,6 +57,7 @@ class Task(Base, SerializerMixin):
     name = Column(String(255), default=None)  # 任务名称
     position = Column(String(255), default=None)  # 当前任务所处园区
 
+
 class User(Base, SerializerMixin):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -63,6 +65,82 @@ class User(Base, SerializerMixin):
     username = Column(String(255), default=None)  # 登录账号
     password = Column(String(255), default=None)  # 登录密码
     token = Column(String(255), default=None)  # 登录密码
+
+
+class UserCollection(object):
+
+    @classmethod
+    async def set_task_running(cls, task_id, monitor_pid):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.id == task_id))
+                task = result.scalars().first()
+                assert task, "NOT FIND TASK"
+                assert task.status == 0, "TASK RUNNING FAIL, TASK STATUS IS {0}".format(task.status)
+                task.status = 1
+                task.monitor_pid = monitor_pid
+                return task.to_dict()
+
+    @classmethod
+    async def get_all_task(cls):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task))
+                task = result.scalars().fetchall()
+                result_list = [t.to_dict() for t in task]
+                result_list.sort(key=lambda x: x.get("start_time"), reverse=True)
+                return result_list
+
+    @classmethod
+    async def get_item_task(cls, task_id):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.id == task_id))
+                task = result.scalars().first()
+                assert task, "NOT FIND TASK"
+                return task.to_dict()
+
+    @classmethod
+    async def get_all_stop_task_monitor_pid(cls):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.status == 2))
+                tasks = result.scalars().fetchall()
+                return [task.monitor_pid for task in tasks]
+
+    @classmethod
+    async def stop_task(cls, task_id):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.id == task_id))
+                task = result.scalars().first()
+                assert task, "NOT FIND TASK"
+                assert task.status != 0, "TASK NOT RUNNING, TASK STATUS IS {0}".format(task.status)
+                task.status = 2
+                task.end_time = datetime.datetime.now()
+                return task.to_dict()
+
+    @classmethod
+    async def delete_task(cls, task_id):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.id == task_id))
+                task = result.scalars().first()
+                assert task, "NOT FIND TASK"
+                assert task.status != 1, "TASK RUNNING NOT DELETE, TASK STATUS IS {0}".format(task.status)
+                res = task.to_dict()
+                await session.delete(task)
+                return res
+
+    @classmethod
+    async def change_task_name(cls, task_id, new_name):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(select(Task).filter(Task.id == task_id))
+                task = result.scalars().first()
+                assert task, "NOT FIND TASK"
+                task.name = new_name
+                return task.to_dict()
 
 
 asyncio.run(create_table())
