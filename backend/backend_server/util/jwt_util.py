@@ -3,6 +3,7 @@ import time
 import jwt
 
 from backend.backend_server.config import JWT_KEY
+from backend.backend_server.database import UserCRUD
 from backend.backend_server.log import log as logger
 from backend.backend_server.util.error_enum import BusinessEnum
 
@@ -29,12 +30,16 @@ def create_account(item_dict: dict):
     return encoded
 
 
-def verify_account(str_encoded_token: str):
+async def verify_account(str_encoded_token: str):
     token_value = _jwt2value(str_encoded_token)
     cur_time = time.time()
     if not token_value or not token_value.get("expiration_time") or token_value.get("expiration_time") > cur_time or not token_value.get("user_name"):
         return False
-    return token_value.get("user_name")
+    user_info = await UserCRUD.get_item_user(token_value.get("user_name"))
+    if user_info:
+        return token_value.get("user_name")
+    else:
+        return False
 
 def logout_account(str_encoded_token: str):
     token_value = _jwt2value(str_encoded_token)

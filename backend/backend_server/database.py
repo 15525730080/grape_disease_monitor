@@ -64,7 +64,6 @@ class User(Base, SerializerMixin):
     name = Column(String(255), default=None)  # 用户名称
     username = Column(String(255), default=None)  # 登录账号
     password = Column(String(255), default=None)  # 登录密码
-    token = Column(String(255), default=None)  # 登录密码
 
 
 class UserCRUD(object):
@@ -79,11 +78,24 @@ class UserCRUD(object):
                 return result_list
 
     @classmethod
-    async def insert_item_user(cls):
+    async def get_item_user(cls, user_name):
         async with async_connect() as session:
             session: Session
             async with session.begin():
-                result = await session.add(User())
+                result = await session.execute(
+                    select(User).filter(
+                        User.username == user_name,
+                    )
+                )
+                item_user = result.scalars().first()
+                return item_user.to_dict()
+
+    @classmethod
+    async def insert_item_user(cls, **params):
+        async with async_connect() as session:
+            session: Session
+            async with session.begin():
+                result = await session.add(User(**params))
                 all_user = result.scalars().fetchall()
                 result_list = [u.to_dict() for u in all_user]
                 return result_list
