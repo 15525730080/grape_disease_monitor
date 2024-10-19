@@ -122,7 +122,6 @@ class GrapeDiseaseClassifier:
         probabilities = np.max(predictions, axis=1)
         print(f"Class probabilities: {probabilities[0]}", image_path)
 
-
 # if __name__ == "__main__":
 #     data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"
 #     model_path = "grape_disease_model_20240901"

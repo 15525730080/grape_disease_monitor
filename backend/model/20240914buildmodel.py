@@ -13,6 +13,7 @@ import tensorflow as tf
 from collections import defaultdict
 from pathlib import Path
 
+
 class GrapeDiseaseClassifierRNN:
     def __init__(self, data_folder=None, model_path="grape_disease_model_rnn"):
         self.data_folder = data_folder

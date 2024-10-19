@@ -15,6 +15,7 @@ from tensorflow.keras.models import Model
 from pathlib import Path
 from collections import defaultdict
 
+
 class GrapeDiseaseClassifier:
     def __init__(self, data_folder=None, model_path="grape_disease_model"):
         self.data_folder = data_folder

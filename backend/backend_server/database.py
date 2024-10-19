@@ -88,6 +88,7 @@ class UserCRUD(object):
                     )
                 )
                 item_user = result.scalars().first()
+                assert item_user, "NOT FIND USER"
                 return item_user.to_dict()
 
     @classmethod
