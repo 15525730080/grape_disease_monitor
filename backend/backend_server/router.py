@@ -55,5 +55,5 @@ async def register(user: User, controller: UserController = Depends(get_user_con
 
 
 @router.post("/logout")
-async def register(user: User, controller: UserController = Depends(get_user_controller)):
-    return await controller.register(user.name, user.username, user.password)
+async def logout(controller: UserController = Depends(get_user_controller)):
+    return await controller.logout()

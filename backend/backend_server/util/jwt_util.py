@@ -18,7 +18,7 @@ def _jwt2value(item_jwt: str):
 
 def create_account(item_dict: dict):
     assert item_dict, "item_dict {0}".format(BusinessEnum.ERROR_ARGV)
-    assert item_dict["user_name"], "item_dict.user_name {0}".format(BusinessEnum.ERROR_ARGV)
+    assert item_dict["username"], "item_dict.username {0}".format(BusinessEnum.ERROR_ARGV)
     item_dict["gen_time"] = time.time()
     seven_days_seconds = 7 * 24 * 3600
     item_dict["expiration_time"] = time.time() + seven_days_seconds
@@ -32,18 +32,17 @@ async def verify_account(str_encoded_token: str):
     token_value = _jwt2value(str_encoded_token)
     cur_time = time.time()
     if not token_value or not token_value.get("expiration_time") or token_value.get(
-            "expiration_time", 0) > cur_time or not token_value.get("user_name"):
+            "expiration_time", 0) < cur_time or not token_value.get("username"):
         return False
-    user_info = await UserCRUD.get_item_user(token_value.get("user_name"))
+    user_info = await UserCRUD.get_item_user(token_value.get("username"))
     if user_info:
-        return token_value.get("user_name")
+        return token_value.get("username")
     else:
         return False
 
 
-async def verify_username_password(user_name, password: str):
-    user_info = await UserCRUD.get_item_user(user_name)
-    print(user_info)
+async def verify_username_password(username, password: str):
+    user_info = await UserCRUD.get_item_user(username)
     if user_info:
         if user_info.get("password") == password:
             return True

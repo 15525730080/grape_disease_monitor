@@ -29,10 +29,11 @@ class UserController(object):
         return ResponseResult(code=500, message="登录失败")
 
     async def register(self, name, username, password):
-        logger.info("username: {0}, password {1}".format(username, password))
+        logger.info("username: {0}, password: {1}".format(username, password))
         assert username, "{0} | {1}".format(username, BusinessEnum.ERROR_ARGV)
         assert password, "{0} | {1}".format(password, BusinessEnum.ERROR_ARGV)
-        res = UserCRUD.insert_item_user(name=name, username=username, password=password)
+        assert not await UserCRUD.get_item_user(username=username), BusinessEnum.USER_EXISTS
+        res = await UserCRUD.insert_item_user(name=name, username=username, password=password)
         if res:
             return ResponseResult(code=200, message="注册成功")
 

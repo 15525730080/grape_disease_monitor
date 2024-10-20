@@ -62,8 +62,9 @@ class User(Base, SerializerMixin):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), default=None)  # 用户名称
-    username = Column(String(255), default=None)  # 登录账号
-    password = Column(String(255), default=None)  # 登录密码
+    username = Column(String(255), default=None, unique=True, nullable=False)  # 登录账号
+    password = Column(String(255), default=None, nullable=False)  # 登录密码
+    user_type = Column(Integer, default=2, nullable=False) # 1 管理员账号 2 普通agent 账号
 
 
 class UserCRUD(object):
@@ -78,28 +79,27 @@ class UserCRUD(object):
                 return result_list
 
     @classmethod
-    async def get_item_user(cls, user_name):
+    async def get_item_user(cls, username):
         async with async_connect() as session:
             session: Session
             async with session.begin():
                 result = await session.execute(
                     select(User).filter(
-                        User.username == user_name,
+                        User.username == username,
                     )
                 )
                 item_user = result.scalars().first()
-                assert item_user, "NOT FIND USER"
-                return item_user.to_dict()
+                return item_user.to_dict() if item_user else item_user
 
     @classmethod
     async def insert_item_user(cls, **params):
         async with async_connect() as session:
             session: Session
             async with session.begin():
-                result = await session.add(User(**params))
-                all_user = result.scalars().fetchall()
-                result_list = [u.to_dict() for u in all_user]
-                return result_list
+                user = User(**params)
+                session.add(user)
+                await session.flush()
+                return user
 
 
 class TaskCRUD(object):
