@@ -56,6 +56,7 @@ class Task(Base, SerializerMixin):
     file_dir = Column(String(255), default=None)  # 存储img文件的路径
     name = Column(String(255), default=None)  # 任务名称
     position = Column(String(255), default=None)  # 当前任务所处园区
+    loop_time = Column(Integer, default=10)  # 默认任务 10s 识别一次
 
 
 class User(Base, SerializerMixin):
@@ -64,7 +65,7 @@ class User(Base, SerializerMixin):
     name = Column(String(255), default=None)  # 用户名称
     username = Column(String(255), default=None, unique=True, nullable=False)  # 登录账号
     password = Column(String(255), default=None, nullable=False)  # 登录密码
-    user_type = Column(Integer, default=2, nullable=False) # 1 管理员账号 2 普通agent 账号
+    user_type = Column(Integer, default=2, nullable=False)  # 1 管理员账号 2 普通agent 账号
 
 
 class UserCRUD(object):
@@ -136,6 +137,26 @@ class TaskCRUD(object):
                 task = result.scalars().first()
                 assert task, "NOT FIND TASK"
                 return task.to_dict()
+
+    @classmethod
+    async def create_task(cls, pid, pid_name, file_dir, name):
+        async with async_connect() as session:
+            async with session.begin():
+                result = await session.execute(
+                    select(Task).filter(Task.target_pid == pid).filter(or_(
+                        Task.status == 0,
+                        Task.status == 1,
+                    )))
+                task = result.scalars().first()
+                assert not task, "MONITOR PID {0} TASK {1} IS RUN".format(pid, task.name)
+                new_task = Task(start_time=datetime.datetime.now(), status=0,
+                                target_pid=pid, name=name, target_pid_name=pid_name)
+                session.add(new_task)
+                await session.flush()
+                file_dir = os.path.join(file_dir, str(new_task.id))
+                new_task.file_dir = file_dir
+                await session.flush()
+                return new_task.id, file_dir
 
     @classmethod
     async def stop_task(cls, task_id):

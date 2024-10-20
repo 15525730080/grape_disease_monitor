@@ -1,6 +1,6 @@
 import sys
-
-sys.path.insert(0, r"e:\\postgraduatecode\\grape_disease_monitor")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 from fastapi import FastAPI
 from backend.backend_server.video_control.video_handle import video_image_handler
 from backend_server.router import router, CustomMiddleware
