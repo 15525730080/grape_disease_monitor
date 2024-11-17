@@ -7,16 +7,13 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader, random_split
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score
 import numpy as np
-import logging
+import onnxruntime as ort
 from backend.model.mobilenetv4 import mobilenetv4_conv_small
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-# 配置日志
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger()
-
 # 自定义数据集路径
 data_dir = r'E:\postgraduatecode\grape_disease_monitor\img\trains_new'
+test_dir = r'E:\postgraduatecode\grape_disease_monitor\img\trains'
 
 
 class GrapeDiseaseModel:
@@ -41,10 +38,8 @@ class GrapeDiseaseModel:
 
         # 加载数据集
         self.dataset = torchvision.datasets.ImageFolder(root=self.data_dir, transform=self.transform)
-        train_size = int(0.8 * len(self.dataset))
-        val_size = len(self.dataset) - train_size
-        self.train_dataset, self.val_dataset = random_split(self.dataset, [train_size, val_size])
-
+        self.test_dataset = torchvision.datasets.ImageFolder(root=test_dir, transform=self.transform)
+        self.train_dataset, self.val_dataset = self.dataset, self.test_dataset
         self.train_loader = DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=2)
         self.val_loader = DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=2)
 
@@ -61,14 +56,14 @@ class GrapeDiseaseModel:
         self.early_stopping = EarlyStopping(patience=self.patience, delta=0.01)
 
     def train(self):
-        logger.info("Starting training...")
+        print("Starting training...")
         for epoch in range(self.num_epochs):
             self.model.train()
             running_loss = 0.0
             all_labels = []
             all_preds = []
 
-            logger.info(f"Starting epoch {epoch + 1}/{self.num_epochs}...")
+            print(f"Starting epoch {epoch + 1}/{self.num_epochs}...")
             for i, (inputs, labels) in enumerate(self.train_loader):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
@@ -90,15 +85,14 @@ class GrapeDiseaseModel:
                 all_labels.extend(labels.cpu().numpy())
                 all_preds.extend(predicted.cpu().numpy())
 
-                if (i + 1) % 10 == 0:
-                    accuracy = accuracy_score(all_labels, all_preds)
-                    logger.info(f'Epoch [{epoch + 1}/{self.num_epochs}], Step [{i + 1}/{len(self.train_loader)}], '
-                                f'Loss: {loss.item():.4f}, Running Loss: {running_loss / (i + 1):.4f}, '
-                                f'Accuracy: {accuracy:.4f}')
+                accuracy = accuracy_score(all_labels, all_preds)
+                print(f'Epoch [{epoch + 1}/{self.num_epochs}], Step [{i + 1}/{len(self.train_loader)}], '
+                      f'Loss: {loss.item():.4f}, Running Loss: {running_loss / (i + 1):.4f}, '
+                      f'Accuracy: {accuracy:.4f}')
 
             # 计算验证集损失
             val_loss = self.validate()
-            logger.info(f'Epoch [{epoch + 1}/{self.num_epochs}], Validation Loss: {val_loss:.4f}')
+            print(f'Epoch [{epoch + 1}/{self.num_epochs}], Validation Loss: {val_loss:.4f}')
 
             # 更新学习率调度器
             self.scheduler.step(val_loss)
@@ -106,7 +100,7 @@ class GrapeDiseaseModel:
             # 检查早停条件
             self.early_stopping(val_loss, self.model)
             if self.early_stopping.early_stop:
-                logger.info("Early stopping triggered.")
+                print("Early stopping triggered.")
                 self.model.load_state_dict(self.early_stopping.best_model)
                 break
 
@@ -133,7 +127,7 @@ class GrapeDiseaseModel:
         self.model.eval()
         all_labels = []
         all_preds = []
-        logger.info("Starting evaluation on test set...")
+        print("Starting evaluation on test set...")
         with torch.no_grad():
             for i, (inputs, labels) in enumerate(self.val_loader):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
@@ -144,15 +138,38 @@ class GrapeDiseaseModel:
 
                 # 打印每个批次的测试日志
                 batch_accuracy = accuracy_score(labels.cpu().numpy(), predicted.cpu().numpy())
-                logger.info(f'Test Batch [{i + 1}/{len(self.val_loader)}], Batch Accuracy: {batch_accuracy:.4f}')
+                print(f'Test Batch [{i + 1}/{len(self.val_loader)}], Batch Accuracy: {batch_accuracy:.4f}')
 
         # 计算并打印测试集整体指标
         accuracy = accuracy_score(all_labels, all_preds)
         recall = recall_score(all_labels, all_preds, average='macro')
         precision = precision_score(all_labels, all_preds, average='macro')
         f1 = f1_score(all_labels, all_preds, average='macro')
-        logger.info(
+        print(
             f'Test Accuracy: {accuracy:.4f}, Recall: {recall:.4f}, Precision: {precision:.4f}, F1 Score: {f1:.4f}')
+
+    def save_model_as_onnx(self, save_path):
+        # 设置为评估模式
+        self.model.eval()
+
+        # 创建一个随机的输入张量作为示例
+        dummy_input = torch.randn(1, 3, 128, 128, device=self.device)
+
+        # 导出模型到ONNX
+        torch.onnx.export(self.model, dummy_input, save_path, input_names=["input"], output_names=["output"],
+                          dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}}, opset_version=11)
+        print(f'Model saved as ONNX at {save_path}')
+
+    def load_and_infer(self, onnx_model_path, input_data):
+        # 加载 ONNX 模型
+        ort_session = ort.InferenceSession(onnx_model_path)
+
+        # 准备输入数据
+        inputs = {ort_session.get_inputs()[0].name: input_data}
+
+        # 推理
+        outputs = ort_session.run(None, inputs)
+        return outputs[0]  # 返回第一个输出
 
 
 class EarlyStopping:
@@ -176,8 +193,16 @@ class EarlyStopping:
 
 
 if __name__ == '__main__':
-
     num_classes = len(os.listdir(data_dir))  # 根据数据集中的类别数来定义
     model = GrapeDiseaseModel(data_dir=data_dir, num_classes=num_classes)
     model.train()
     model.evaluate()
+    #
+    # # 保存为ONNX模型
+    # onnx_model_path = 'grape_disease_model.onnx'
+    # model.save_model_as_onnx(onnx_model_path)
+    #
+    # # 推理示例：假设我们有一个输入数据 (input_data) 需要推理
+    # input_data = np.random.randn(1, 3, 128, 128).astype(np.float32)  # 示例输入
+    # predictions = model.load_and_infer(onnx_model_path, input_data)
+    # print(f"Inference result: {predictions}")
