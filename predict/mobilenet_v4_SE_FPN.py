@@ -249,13 +249,14 @@ class GrapeDiseaseClassifier:
             probability = probabilities[0][preds[0]].item()
 
         predicted_class = label_mapping[str(preds.item())]
-        print(f"Predicted class: {predicted_class}")
-        print(f"Class probability: {probability:.4f}, Image path: {image_path}")
+        # print(f"Predicted class: {predicted_class}")
+        # print(f"Class probability: {probability:.4f}, Image path: {image_path}")
+        return predicted_class, round(probability, 4)
 
 
 if __name__ == "__main__":
-    data_folder = r"/Users/fanbozhou/Downloads/trains"  # 请替换为您的数据集路径
-    model_path = "mobilenetv4_SE_FPN.pth"
+    data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"
+    model_path = "mobilenet_v4_SE_FPN.pth"
 
     classifier = GrapeDiseaseClassifier(data_folder, model_path)
     # classifier.train_model(epochs=50, batch_size=32, learning_rate=1e-4, patience=5)

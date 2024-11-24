@@ -249,9 +249,9 @@ class GrapeDiseaseClassifier:
             probabilities = torch.nn.functional.softmax(outputs, dim=1)
             probability = probabilities[0][preds[0]].item()
         predicted_class = label_mapping[str(preds.item())]
-        print(f"Predicted class: {predicted_class}")
-        print(f"Class probability: {probability:.4f}, Image path: {image_path}")
-
+        # print(f"Predicted class: {predicted_class}")
+        # print(f"Class probability: {probability:.4f}, Image path: {image_path}")
+        return predicted_class, round(probability, 4)
 
 if __name__ == "__main__":
     data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"
