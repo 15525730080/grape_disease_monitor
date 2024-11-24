@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from src_mobilenet_v4 import MultiHeadSelfAttentionBlock, InvertedResidual, MODEL_SPECS, build_blocks
+from .src_mobilenet_v4 import MultiHeadSelfAttentionBlock, InvertedResidual, MODEL_SPECS, build_blocks
 
 
 # Helper functions

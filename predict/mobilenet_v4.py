@@ -15,9 +15,13 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-sys.path.append(str(Path().joinpath("model").resolve()))
+
+sys.path.append(str(Path(__file__).parent.joinpath("model").resolve()))
 # 定义 MobileNetV4 模型（确保有 mobilenet_v4.py 文件）
-from model.src_mobilenet_v4 import MobileNetV4
+try:
+    from .model.src_mobilenet_v4 import MobileNetV4
+except:
+    from model.src_mobilenet_v4 import MobileNetV4
 
 
 class GrapeDiseaseDataset(Dataset):
@@ -87,7 +91,7 @@ class GrapeDiseaseClassifier:
         labels_encoded = self.le.fit_transform(labels)
         # 保存标签编码映射
         label_mapping = {idx: label for idx, label in enumerate(self.le.classes_)}
-        with open("label_mapping.json", "w", encoding="utf-8") as json_file:
+        with open(str(Path(__file__).parent.joinpath("label_mapping.json").resolve()), "w", encoding="utf-8") as json_file:
             json.dump(label_mapping, json_file, ensure_ascii=False)
 
         X_train, X_val, y_train, y_val = train_test_split(images, labels_encoded, test_size=0.2, random_state=42)
@@ -220,7 +224,7 @@ class GrapeDiseaseClassifier:
 
     def predict(self, image_path):
         # 加载模型和标签映射
-        with open("label_mapping.json", "r", encoding="utf-8") as json_file:
+        with open(str(Path(__file__).parent.joinpath("label_mapping.json").resolve()), "r", encoding="utf-8") as json_file:
             label_mapping = json.load(json_file)
         num_classes = len(label_mapping)
         model = MobileNetV4("MobileNetV4ConvSmall")
@@ -252,6 +256,7 @@ class GrapeDiseaseClassifier:
         # print(f"Predicted class: {predicted_class}")
         # print(f"Class probability: {probability:.4f}, Image path: {image_path}")
         return predicted_class, round(probability, 4)
+
 
 if __name__ == "__main__":
     data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"

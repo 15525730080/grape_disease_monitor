@@ -9,6 +9,9 @@ import json
 
 __all__ = ["ensemble_predict"]
 
+import sys
+
+sys.path.append(str(Path(__file__).parent.parent.resolve()))
 from predict.mobilenet_v4 import GrapeDiseaseClassifier as MobilenetV4
 from predict.mobilenet_v4_SE_FPN import GrapeDiseaseClassifier as MobilenetV4SEFPN
 from predict.mobilenet_v4_SE_BiFPN import GrapeDiseaseClassifier as MobilenetV4SEBiFPN
@@ -89,7 +92,7 @@ class EnsembleGrapeDiseaseClassifier:
         print(f"Class probabilities: {probabilities * 100} %")
         end_predict = time.time()
         print("预测耗时 {0} 秒".format(end_predict - start_predict))
-        return predicted_class, round(float(probabilities * 100), 4)
+        return predicted_class, round(float(probabilities * 100), 4), round(end_predict - start_predict, 4)
 
 
 ensemble_classifier = EnsembleGrapeDiseaseClassifier(
@@ -113,7 +116,6 @@ def ensemble_predict(img_path: BytesIO | str) -> tuple[str, float]:
     return ensemble_classifier.predict(img_path)
 
 
-#
 if __name__ == '__main__':
     test_image_paths = [
         r"E:\postgraduatecode\grape_disease_monitor\img\trains\溃疡病\6235845bd7561b594fb696e2.jpg",
