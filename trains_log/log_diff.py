@@ -55,15 +55,15 @@ FPN_epochs, FPN_train_losses, FPN_train_accuracies, FPN_val_losses, FPN_val_accu
 plt.figure(figsize=(12, 8))
 
 # 绘制基础模型
-# plt.plot(base_epochs, base_train_losses, label='MobileNetV4-训练损失', marker='o', linestyle='-')
+plt.plot(base_epochs, base_train_losses, label='MobileNetV4-训练损失', marker='o', linestyle='-')
 plt.plot(base_epochs, base_val_losses, label='MobileNetV4-验证损失', marker='o', linestyle='--')
 
 # 绘制增强SE-FPN模型
-# plt.plot(provide_epochs, provide_train_losses, label='MobileNetV4-SE-BiFPN-训练损失', marker='s', linestyle='-')
+plt.plot(provide_epochs, provide_train_losses, label='MobileNetV4-SE-BiFPN-训练损失', marker='s', linestyle='-')
 plt.plot(provide_epochs, provide_val_losses, label='MobileNetV4-SE-BiFPN-验证损失', marker='s', linestyle='--')
 
 # 绘制增强SE-BiFPN模型
-# plt.plot(FPN_epochs, FPN_train_losses, label='MobileNetV4-SE-FPN-训练损失', marker='^', linestyle='-')
+plt.plot(FPN_epochs, FPN_train_losses, label='MobileNetV4-SE-FPN-训练损失', marker='^', linestyle='-')
 plt.plot(FPN_epochs, FPN_val_losses, label='MobileNetV4-SE-FPN-验证损失', marker='^', linestyle='--')
 
 plt.xlabel('Epoch')
@@ -90,15 +90,15 @@ plt.show()
 plt.figure(figsize=(12, 8))
 
 # 绘制基础模型
-# plt.plot(base_epochs, base_train_accuracies, label='MobileNetV4-训练准确率', marker='o', linestyle='-')
+plt.plot(base_epochs, base_train_accuracies, label='MobileNetV4-训练准确率', marker='o', linestyle='-')
 plt.plot(base_epochs, base_val_accuracies, label='MobileNetV4-验证准确率', marker='o', linestyle='--')
 
 # 绘制增强SE-FPN模型
-# plt.plot(provide_epochs, provide_train_accuracies, label='MobileNetV4-SE-BiFPN-训练准确率', marker='s', linestyle='-')
+plt.plot(provide_epochs, provide_train_accuracies, label='MobileNetV4-SE-BiFPN-训练准确率', marker='s', linestyle='-')
 plt.plot(provide_epochs, provide_val_accuracies, label='MobileNetV4-SE-BiFPN-验证准确率', marker='s', linestyle='--')
 
 # 绘制增强SE-BiFPN模型
-# plt.plot(FPN_epochs, FPN_train_accuracies, label='MobileNetV4-SE-FPN-训练准确率', marker='^', linestyle='-')
+plt.plot(FPN_epochs, FPN_train_accuracies, label='MobileNetV4-SE-FPN-训练准确率', marker='^', linestyle='-')
 plt.plot(FPN_epochs, FPN_val_accuracies, label='MobileNetV4-SE-FPN-验证准确率', marker='^', linestyle='--')
 
 plt.xlabel('Epoch')
