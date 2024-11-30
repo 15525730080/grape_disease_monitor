@@ -1,8 +1,6 @@
-import os
 from io import BytesIO
 
-from fastapi import FastAPI, File, UploadFile
-import base64
+from fastapi import FastAPI, UploadFile
 from predict.launch_ensemble_classifier import ensemble_predict
 
 # 初始化 FastAPI 应用
@@ -41,4 +39,4 @@ if __name__ == "__main__":
     import uvicorn
 
     # 启动服务，监听端口 202230
-    uvicorn.run(app, host="0.0.0.0", port=20223)
+    uvicorn.run(app, host="0.0.0.0", port=20229)

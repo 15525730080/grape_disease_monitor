@@ -1,0 +1,139 @@
+Epoch 1/50
+- Learning rate: 0.000100
+- Training loss: 3.5432, accuracy: 0.4678
+- Validation loss: 2.7821, accuracy: 0.4416
+** Best model saved with accuracy: 0.4416
+Epoch 2/50
+- Learning rate: 0.000100
+- Training loss: 0.9767, accuracy: 0.6589
+- Validation loss: 0.8429, accuracy: 0.6857
+** Best model saved with accuracy: 0.6857
+Epoch 3/50
+- Learning rate: 0.000100
+- Training loss: 0.7774, accuracy: 0.7388
+- Validation loss: 0.6448, accuracy: 0.7740
+** Best model saved with accuracy: 0.7740
+Epoch 4/50
+- Learning rate: 0.000100
+- Training loss: 0.6457, accuracy: 0.7667
+- Validation loss: 0.5603, accuracy: 0.8000
+** Best model saved with accuracy: 0.8000
+Epoch 5/50
+- Learning rate: 0.000100
+- Training loss: 0.5801, accuracy: 0.7921
+- Validation loss: 0.5460, accuracy: 0.8364
+** Best model saved with accuracy: 0.8364
+Epoch 6/50
+- Learning rate: 0.000100
+- Training loss: 0.5629, accuracy: 0.7992
+- Validation loss: 0.5182, accuracy: 0.8494
+** Best model saved with accuracy: 0.8494
+Epoch 7/50
+- Learning rate: 0.000100
+- Training loss: 0.5442, accuracy: 0.8213
+- Validation loss: 0.5009, accuracy: 0.8338
+Validation accuracy did not improve from 0.8494
+Epoch 8/50
+- Learning rate: 0.000100
+- Training loss: 0.5139, accuracy: 0.8194
+- Validation loss: 0.4668, accuracy: 0.8468
+Validation accuracy did not improve from 0.8494
+Epoch 9/50
+- Learning rate: 0.000100
+- Training loss: 0.4900, accuracy: 0.8213
+- Validation loss: 0.4775, accuracy: 0.8468
+Validation accuracy did not improve from 0.8494
+EarlyStopping counter: 1 out of 5
+Epoch 10/50
+- Learning rate: 0.000100
+- Training loss: 0.4960, accuracy: 0.8369
+- Validation loss: 0.4752, accuracy: 0.8338
+Validation accuracy did not improve from 0.8494
+EarlyStopping counter: 2 out of 5
+Epoch 11/50
+- Learning rate: 0.000100
+- Training loss: 0.5321, accuracy: 0.8083
+- Validation loss: 0.4735, accuracy: 0.8416
+Validation accuracy did not improve from 0.8494
+EarlyStopping counter: 3 out of 5
+Epoch 12/50
+- Learning rate: 0.000100
+- Training loss: 0.4710, accuracy: 0.8369
+- Validation loss: 0.4003, accuracy: 0.8571
+** Best model saved with accuracy: 0.8571
+Epoch 13/50
+- Learning rate: 0.000100
+- Training loss: 0.4582, accuracy: 0.8363
+- Validation loss: 0.4146, accuracy: 0.8805
+** Best model saved with accuracy: 0.8805
+EarlyStopping counter: 1 out of 5
+Epoch 14/50
+- Learning rate: 0.000100
+- Training loss: 0.4404, accuracy: 0.8512
+- Validation loss: 0.4142, accuracy: 0.8545
+Validation accuracy did not improve from 0.8805
+EarlyStopping counter: 2 out of 5
+Epoch 15/50
+- Learning rate: 0.000100
+- Training loss: 0.4798, accuracy: 0.8298
+- Validation loss: 0.4120, accuracy: 0.8701
+Validation accuracy did not improve from 0.8805
+EarlyStopping counter: 3 out of 5
+Epoch 16/50
+- Learning rate: 0.000100
+- Training loss: 0.4161, accuracy: 0.8506
+- Validation loss: 0.3499, accuracy: 0.8831
+** Best model saved with accuracy: 0.8831
+Epoch 17/50
+- Learning rate: 0.000100
+- Training loss: 0.4233, accuracy: 0.8583
+- Validation loss: 0.3819, accuracy: 0.8675
+Validation accuracy did not improve from 0.8831
+EarlyStopping counter: 1 out of 5
+Epoch 18/50
+- Learning rate: 0.000100
+- Training loss: 0.4179, accuracy: 0.8551
+- Validation loss: 0.3796, accuracy: 0.8779
+Validation accuracy did not improve from 0.8831
+EarlyStopping counter: 2 out of 5
+Epoch 19/50
+- Learning rate: 0.000100
+- Training loss: 0.4355, accuracy: 0.8564
+- Validation loss: 0.3230, accuracy: 0.8753
+Validation accuracy did not improve from 0.8831
+Epoch 20/50
+- Learning rate: 0.000100
+- Training loss: 0.4214, accuracy: 0.8525
+- Validation loss: 0.2933, accuracy: 0.9117
+** Best model saved with accuracy: 0.9117
+Epoch 21/50
+- Learning rate: 0.000100
+- Training loss: 0.3363, accuracy: 0.8837
+- Validation loss: 0.3228, accuracy: 0.8987
+Validation accuracy did not improve from 0.9117
+EarlyStopping counter: 1 out of 5
+Epoch 22/50
+- Learning rate: 0.000100
+- Training loss: 0.3693, accuracy: 0.8635
+- Validation loss: 0.3028, accuracy: 0.8987
+Validation accuracy did not improve from 0.9117
+EarlyStopping counter: 2 out of 5
+Epoch 23/50
+- Learning rate: 0.000100
+- Training loss: 0.3690, accuracy: 0.8635
+- Validation loss: 0.4060, accuracy: 0.8701
+Validation accuracy did not improve from 0.9117
+EarlyStopping counter: 3 out of 5
+Epoch 24/50
+- Learning rate: 0.000010
+- Training loss: 0.3923, accuracy: 0.8622
+- Validation loss: 0.3358, accuracy: 0.8883
+Validation accuracy did not improve from 0.9117
+EarlyStopping counter: 4 out of 5
+Epoch 25/50
+- Learning rate: 0.000010
+- Training loss: 0.3495, accuracy: 0.8720
+- Validation loss: 0.3081, accuracy: 0.8883
+Validation accuracy did not improve from 0.9117
+EarlyStopping counter: 5 out of 5
+Early stopping triggered
