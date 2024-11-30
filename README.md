@@ -36,3 +36,5 @@ MobileNetV4_SE_FPN是MobileNetV4的改进版本，引入了Squeeze-and-Excitatio
 
 MobileNetV4_SE_BiFPN进一步扩展了MobileNetV4_SE_FPN，采用了双特征金字塔网络（BiFPN）。BiFPN通过结合来自不同层的特征，提供了更丰富的上下文信息，从而提高了模型对复杂场景下病害识别的性能。
 
+
+![验证准确率对比](https://github.com/user-attachments/assets/11656316-46ff-4056-aca7-8e409039e00f)
