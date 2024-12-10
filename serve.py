@@ -7,20 +7,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from predict.img_diff import ImageComparator
 from predict.launch_ensemble_classifier import ensemble_predict
-
-from tinydb import TinyDB, Query
-from tinydb.storages import JSONStorage
-from tinydb.middlewares import CachingMiddleware
-from filelock import FileLock  # 用于进程间文件锁
+from data_model import db, Query, IdentifySchema, db_lock, get_identify_list, add_item_identify
 
 # 初始化 Flask 应用
 app = Flask(__name__)
 CORS(app)  # 启用跨域
-
-# 初始化 TinyDB
-db_path = "data.json"
-db_lock = FileLock("data.json.lock")  # 防止进程间竞争
-db = TinyDB(db_path, storage=CachingMiddleware(JSONStorage), ensure_ascii=False)
 
 
 def diff_before_img(img):
@@ -44,6 +35,7 @@ def diff_before_img(img):
                         print(f"The images are not similar. Similarity score: {similarity_score:.2f}.")
                         db_table.upsert({"key": "before_img", "img": img, "time": time.time()},
                                         Query().key == "before_img")
+
                         return False
                 except Exception as e:
                     print(f"Error comparing images: {e}")
@@ -59,34 +51,6 @@ def keep_live():
     return "OK", 200
 
 
-@app.route("/upload/", methods=["POST"])
-def upload_image():
-    """
-    上传图片并返回 JSON 响应。
-    图片数据被存储在内存中而不是磁盘。
-    """
-    try:
-        # 获取上传的文件
-        file = request.files.get("file")
-        if not file:
-            return jsonify({"code": 400, "msg": "No file provided"}), 400
-        # 将图片文件读入内存
-        image_data = file.read()
-        image_data = bytes(image_data)
-        diff_before_img(image_data)
-        predicted_class, probabilities, custom_time = ensemble_predict(BytesIO(image_data))
-
-        # 返回 JSON 响应
-        return jsonify({
-            "code": 200,
-            "predicted_class": predicted_class,
-            "probabilities": probabilities,
-            "custom_time": custom_time
-        })
-    except Exception as e:
-        return jsonify({"code": 500, "msg": str(e)}), 500
-
-
 @app.route('/upload_base64/', methods=['POST'])
 def upload_base64():
     try:
@@ -96,8 +60,12 @@ def upload_base64():
         header, encoded = base64_image.split(",", 1)
         image_data = base64.b64decode(encoded)
         image_data = bytes(image_data)
-        diff_before_img(image_data)
+        is_similar = diff_before_img(image_data)
         predicted_class, probabilities, custom_time = ensemble_predict(BytesIO(image_data))
+        if not is_similar and probabilities > 0.9:
+            add_item_identify(IdentifySchema(key_user_time=int(time.time()), disease_type=predicted_class,
+                                       disease_type_rate=probabilities, disease_monitor_time=custom_time,
+                                       img_str=encoded, upload_user="123", upload_solution="bj"))
         # 返回 JSON 响应
         return jsonify({
             "code": 200,
@@ -108,6 +76,11 @@ def upload_base64():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"code": 500, "msg": str(e)}), 500
+
+
+@app.route('/get_grape_disease_list/', methods=['GET'])
+def get_grape_disease_list():
+    return jsonify(get_identify_list())
 
 
 if __name__ == "__main__":
