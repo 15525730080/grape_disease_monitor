@@ -55,6 +55,9 @@ def keep_live():
 def upload_base64():
     try:
         data = request.get_json()
+        user = data.get("user")
+        if not user:
+            user = "123"
         base64_image = data.get("image", "")
         # 提取 Base64 部分
         header, encoded = base64_image.split(",", 1)
@@ -63,9 +66,14 @@ def upload_base64():
         is_similar = diff_before_img(image_data)
         predicted_class, probabilities, custom_time = ensemble_predict(BytesIO(image_data))
         if not is_similar and probabilities > 0.9:
-            add_item_identify(IdentifySchema(key_user_time=int(time.time()), disease_type=predicted_class,
-                                       disease_type_rate=probabilities, disease_monitor_time=custom_time,
-                                       img_str=encoded, upload_user="123", upload_solution="bj"))
+            add_item_identify(IdentifySchema(key_user_time=user + "_" + str(int(time.time())),
+                                             disease_type=predicted_class,
+                                             disease_type_rate=probabilities,
+                                             disease_monitor_time=custom_time,
+                                             record_time=int(time.time()),
+                                             img_str=encoded,
+                                             upload_user="123",
+                                             upload_solution="bj"))
         # 返回 JSON 响应
         return jsonify({
             "code": 200,

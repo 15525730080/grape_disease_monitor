@@ -1,16 +1,16 @@
+
 from tinydb import TinyDB, Query
-from tinydb.storages import JSONStorage
-from tinydb.middlewares import CachingMiddleware
+from tinydb.storages import MemoryStorage
 from filelock import FileLock
 
 # 初始化 TinyDB
-db_path = "data.json"
-db_lock = FileLock("data.json.lock")  # 防止进程间竞争
-db = TinyDB(db_path, storage=CachingMiddleware(JSONStorage), ensure_ascii=False)
+db_lock = FileLock("data.lock")  # 防止进程间竞争
+db = TinyDB(storage=MemoryStorage)
 
 
 class IdentifySchema(dict):
     key_user_time: str
+    record_time: int
     disease_type: str
     disease_type_rate: float
     disease_monitor_time: int
