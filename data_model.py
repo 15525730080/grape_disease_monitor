@@ -1,15 +1,15 @@
-
 from tinydb import TinyDB, Query
 from tinydb.storages import MemoryStorage
 from filelock import FileLock
 
 # 初始化 TinyDB
+data_file = "data.json"
 db_lock = FileLock("data.lock")  # 防止进程间竞争
-db = TinyDB(storage=MemoryStorage)
+db = TinyDB(data_file)
 
 
 class IdentifySchema(dict):
-    key_user_time: str
+    id: str
     record_time: int
     disease_type: str
     disease_type_rate: float

@@ -1,6 +1,7 @@
 import base64
 import time
 import traceback
+import uuid
 from io import BytesIO
 
 from flask import Flask, request, jsonify
@@ -14,7 +15,7 @@ app = Flask(__name__)
 CORS(app)  # 启用跨域
 
 
-def diff_before_img(img):
+def diff_before_img(img, img_encoded):
     """
     比较当前图片和数据库中存储的图片，并决定是否更新图片。
     """
@@ -23,7 +24,8 @@ def diff_before_img(img):
         record = db_table.get(Query().key == "before_img")
         if record:
             if time.time() - record["time"] > 60 * 30:
-                db_table.upsert({"key": "before_img", "img": img, "time": time.time()}, Query().key == "before_img")
+                db_table.upsert({"key": "before_img", "img": img_encoded, "time": time.time()},
+                                Query().key == "before_img")
             else:
                 try:
                     is_similar, similarity_score = ImageComparator.compare_images(bytes(record["img"]), img,
@@ -33,16 +35,17 @@ def diff_before_img(img):
                         return True
                     else:
                         print(f"The images are not similar. Similarity score: {similarity_score:.2f}.")
-                        db_table.upsert({"key": "before_img", "img": img, "time": time.time()},
+                        db_table.upsert({"key": "before_img", "img": img_encoded, "time": time.time()},
                                         Query().key == "before_img")
 
                         return False
                 except Exception as e:
                     print(f"Error comparing images: {e}")
-                    db_table.upsert({"key": "before_img", "img": img, "time": time.time()}, Query().key == "before_img")
+                    db_table.upsert({"key": "before_img", "img": img_encoded, "time": time.time()},
+                                    Query().key == "before_img")
                     return False
         else:
-            db_table.insert({"key": "before_img", "img": img, "time": time.time()})
+            db_table.insert({"key": "before_img", "img": img_encoded, "time": time.time()})
             return False
 
 
@@ -56,24 +59,25 @@ def upload_base64():
     try:
         data = request.get_json()
         user = data.get("user")
-        if not user:
-            user = "123"
         base64_image = data.get("image", "")
+        upload_solution = data.get("upload_solution", "")
+
         # 提取 Base64 部分
         header, encoded = base64_image.split(",", 1)
         image_data = base64.b64decode(encoded)
         image_data = bytes(image_data)
-        is_similar = diff_before_img(image_data)
+        is_similar = diff_before_img(image_data, encoded)
         predicted_class, probabilities, custom_time = ensemble_predict(BytesIO(image_data))
         if not is_similar and probabilities > 0.9:
-            add_item_identify(IdentifySchema(key_user_time=user + "_" + str(int(time.time())),
-                                             disease_type=predicted_class,
-                                             disease_type_rate=probabilities,
-                                             disease_monitor_time=custom_time,
-                                             record_time=int(time.time()),
-                                             img_str=encoded,
-                                             upload_user="123",
-                                             upload_solution="bj"))
+            add_item_identify(IdentifySchema(
+                id=str(uuid.uuid1()),
+                disease_type=predicted_class,
+                disease_type_rate=probabilities,
+                disease_monitor_time=custom_time,
+                record_time=int(time.time()),
+                img_str=encoded,
+                upload_user=user,
+                upload_solution=upload_solution))
         # 返回 JSON 响应
         return jsonify({
             "code": 200,
