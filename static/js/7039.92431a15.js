@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunklin_cms_vue"]=self["webpackChunklin_cms_vue"]||[]).push([[7039],{27039:function(e,l,r){r.r(l),r.d(l,{a:function(){return a},tableColumn:function(){return p}});var p=[{prop:"rank",label:"排名"},{prop:"title",label:"电影名",width:150},{prop:"rating",label:"评分",noRepeat:!0,width:100},{prop:"directors",label:"导演",width:150},{prop:"casts",label:"主演",width:150},{prop:"year",label:"年份"},{prop:"recommend",label:"推荐",noRepeat:!0},{prop:"remark",label:"备注",noRepeat:!0,width:200}],a=1}}]);
+//# sourceMappingURL=7039.92431a15.js.map

@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunklin_cms_vue"]=self["webpackChunklin_cms_vue"]||[]).push([[1250],{11250:function(e){e.exports=JSON.parse('{"name":"lc-plugin-lin-cms-ui","title":"UI","version":"1.0.0","_linVersion":"0.0.1-alpha.3","description":"","author":"","dependencies":{},"devDependencies":{}}')}}]);

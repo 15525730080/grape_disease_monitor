@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunklin_cms_vue"]=self["webpackChunklin_cms_vue"]||[]).push([[5784],{5784:function(e){e.exports=JSON.parse('{"name":"lc-plugin-custom","title":"自定义组件展示","version":"1.0.0","_linVersion":"0.4.0","description":"自定义组件展示","author":"","dependencies":{"element-plus":"^1.0.2-beta.36"},"devDependencies":{}}')}}]);

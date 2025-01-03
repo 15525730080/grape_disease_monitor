@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from predict.img_diff import ImageComparator
 from predict.launch_ensemble_classifier import ensemble_predict
-from data_model import db, Query, IdentifySchema, db_lock, get_identify_list, add_item_identify
+from data_model import db, Query, IdentifySchema, db_lock, get_identify_list, add_item_identify, del_items
 
 # 初始化 Flask 应用
 app = Flask(__name__)
@@ -93,6 +93,12 @@ def upload_base64():
 @app.route('/get_grape_disease_list/', methods=['GET'])
 def get_grape_disease_list():
     return jsonify(get_identify_list())
+
+
+@app.route('/delete_grape_disease_list/', methods=['POST'])
+def delete_grape_disease_list():
+    data = request.get_json()
+    return jsonify(del_items(data.get("ids")))
 
 
 if __name__ == "__main__":
