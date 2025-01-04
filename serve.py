@@ -6,9 +6,14 @@ from io import BytesIO
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from werkzeug.utils import redirect
+
 from predict.img_diff import ImageComparator
 from predict.launch_ensemble_classifier import ensemble_predict
 from data_model import db, Query, IdentifySchema, db_lock, get_identify_list, add_item_identify, del_items
+
+key_pem = r"C:\Program Files\OpenSSL-Win64\bin\key.pem"
+cert_pem = r"C:\Program Files\OpenSSL-Win64\bin\cert.pem"
 
 # 初始化 Flask 应用
 app = Flask(__name__)
@@ -101,6 +106,10 @@ def delete_grape_disease_list():
     return jsonify(del_items(data.get("ids")))
 
 
+@app.route('/')
+def index():
+    return redirect('/static/index.html', code=301)
+
 if __name__ == "__main__":
     # 启动服务，监听端口 20229
-    app.run(host="0.0.0.0", port=20229)
+    app.run(host="0.0.0.0", port=20228)
