@@ -24,6 +24,33 @@ except:
     from model.src_mobilenet_v4_SE_BiFPN import MobileNetV4Pro
 
 
+def get_model_memory_size(model):
+    """
+    计算模型所占内存大小
+    :param model: PyTorch 模型
+    :return: 模型所占内存大小（字节）
+    """
+    total_memory = 0
+    for param in model.parameters():
+        # 计算每个参数的元素数量
+        num_elements = param.numel()
+        # 根据数据类型获取每个元素的字节数
+        if param.dtype == torch.float32:
+            bytes_per_element = 4
+        elif param.dtype == torch.float64:
+            bytes_per_element = 8
+        elif param.dtype == torch.int32:
+            bytes_per_element = 4
+        elif param.dtype == torch.int64:
+            bytes_per_element = 8
+        else:
+            # 对于其他不常见的数据类型，这里简单假设每个元素 4 字节
+            bytes_per_element = 4
+        # 计算该参数所占内存大小
+        param_memory = num_elements * bytes_per_element
+        total_memory += param_memory
+    return total_memory
+
 class GrapeDiseaseDataset(Dataset):
     def __init__(self, images, labels, transform=None):
         self.images = images
@@ -233,6 +260,16 @@ class GrapeDiseaseClassifier:
         model = model.to(device)
         model.eval()
 
+        # 计算模型参数量
+        total_params = sum(p.numel() for p in model.parameters())
+        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        # print(f"Total number of parameters: {total_params}")
+        # print(f"Number of trainable parameters: {trainable_params}")
+
+        # 计算模型所占内存大小
+        model_memory = get_model_memory_size(model)
+        # print(f"Model memory usage: {model_memory} bytes ({model_memory / (1024 * 1024):.2f} MB)")
+
         # 图像预处理
         transform = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -256,14 +293,14 @@ class GrapeDiseaseClassifier:
         # print(f"Predicted class: {predicted_class}")
         # print(f"Class probability: {probability:.4f}, Image path: {image_path}")
         return predicted_class, round(probability, 4)
-#
-#
+
+
 # if __name__ == "__main__":
 #     data_folder = r"E:\postgraduatecode\grape_disease_monitor\img\trains"
 #     model_path = "mobilenet_v4_SE_BiFPN.pth"
 #
 #     classifier = GrapeDiseaseClassifier(data_folder, model_path)
-##     classifier.train_model(epochs=50, batch_size=32, learning_rate=1e-4, patience=5)
+# #     classifier.train_model(epochs=50, batch_size=32, learning_rate=1e-4, patience=5)
 #
 #     # 测试预测
 #     test_image_paths = [
