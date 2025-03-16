@@ -100,58 +100,58 @@ EarlyStopping counter: 1 out of 5
 Epoch 19/50
 - Learning rate: 0.000010
 - Training loss: 0.2162, accuracy: 0.9246
-- Validation loss: 0.1798, accuracy: 0.9455
-** Best model saved with accuracy: 0.9455
+- Validation loss: 0.1798, accuracy: 0.9630
+** Best model saved with accuracy: 0.9630
 Epoch 20/50
 - Learning rate: 0.000010
 - Training loss: 0.2113, accuracy: 0.9259
-- Validation loss: 0.1904, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1904, accuracy: 0.9520
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 1 out of 5
 Epoch 21/50
 - Learning rate: 0.000010
 - Training loss: 0.2200, accuracy: 0.9279
-- Validation loss: 0.1963, accuracy: 0.9299
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1963, accuracy: 0.9490
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 2 out of 5
 Epoch 22/50
 - Learning rate: 0.000010
 - Training loss: 0.2199, accuracy: 0.9207
-- Validation loss: 0.1764, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1764, accuracy: 0.9580
+Validation accuracy did not improve from 0.9630
 Epoch 23/50
 - Learning rate: 0.000010
 - Training loss: 0.1997, accuracy: 0.9298
-- Validation loss: 0.1727, accuracy: 0.9325
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1727, accuracy: 0.9560
+Validation accuracy did not improve from 0.9630
 Epoch 24/50
 - Learning rate: 0.000010
 - Training loss: 0.2037, accuracy: 0.9298
-- Validation loss: 0.1867, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1867, accuracy: 0.9530
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 1 out of 5
 Epoch 25/50
 - Learning rate: 0.000010
 - Training loss: 0.1895, accuracy: 0.9292
-- Validation loss: 0.1919, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1919, accuracy: 0.9510
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 2 out of 5
 Epoch 26/50
 - Learning rate: 0.000010
 - Training loss: 0.2032, accuracy: 0.9201
-- Validation loss: 0.1859, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1859, accuracy: 0.9550
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 3 out of 5
 Epoch 27/50
 - Learning rate: 0.000001
 - Training loss: 0.2126, accuracy: 0.9292
-- Validation loss: 0.1855, accuracy: 0.9403
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1855, accuracy: 0.9540
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 4 out of 5
 Epoch 28/50
 - Learning rate: 0.000001
 - Training loss: 0.1872, accuracy: 0.9305
-- Validation loss: 0.1948, accuracy: 0.9325
-Validation accuracy did not improve from 0.9455
+- Validation loss: 0.1948, accuracy: 0.9480
+Validation accuracy did not improve from 0.9630
 EarlyStopping counter: 5 out of 5
 Early stopping triggered
