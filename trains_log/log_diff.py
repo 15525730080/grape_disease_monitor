@@ -39,7 +39,7 @@ def parse_log(log_content):
 
 
 # 读取并解析日志
-mobilenet_log = read_log("mobilenet_v4.log")
+mobilenet_log = read_log("mobilenet_v4.txt")
 mobilenet_epochs, mobilenet_lrs, mobilenet_train_losses, mobilenet_train_accuracies, mobilenet_val_losses, mobilenet_val_accuracies = parse_log(
     mobilenet_log)
 
@@ -51,11 +51,11 @@ mobilenet_se_bifpn_log = read_log("mobilenet_v4_SE_BiFPN.log")
 mobilenet_se_bifpn_epochs, mobilenet_se_bifpn_lrs, mobilenet_se_bifpn_train_losses, mobilenet_se_bifpn_train_accuracies, mobilenet_se_bifpn_val_losses, mobilenet_se_bifpn_val_accuracies = parse_log(
     mobilenet_se_bifpn_log)
 
-ghostnet_log = read_log("GhostNet_v2.log")
+ghostnet_log = read_log("GhostNet_v2.txt")
 ghostnet_epochs, ghostnet_lrs, ghostnet_train_losses, ghostnet_train_accuracies, ghostnet_val_losses, ghostnet_val_accuracies = parse_log(
     ghostnet_log)
 
-efficientnet_log = read_log("EfficientNet-B7.log")
+efficientnet_log = read_log("EfficientNet-v2.txt")
 efficientnet_epochs, efficientnet_lrs, efficientnet_train_losses, efficientnet_train_accuracies, efficientnet_val_losses, efficientnet_val_accuracies = parse_log(
     efficientnet_log)
 
@@ -182,17 +182,17 @@ def plot_comparison_and_difference(epochs1, val_losses1, val_accuracies1, lrs1,
     plt.savefig(title_prefix + 'val_learning_rate_difference.png', dpi=300)
     plt.show()
 
-
-# MobileNetV4优化对比
-plot_comparison_and_difference(mobilenet_epochs, mobilenet_val_losses, mobilenet_val_accuracies, mobilenet_lrs,
-                               mobilenet_se_fpn_epochs, mobilenet_se_fpn_val_losses, mobilenet_se_fpn_val_accuracies,
-                               mobilenet_se_fpn_lrs,
-                               mobilenet_se_bifpn_epochs, mobilenet_se_bifpn_val_losses, mobilenet_se_bifpn_val_accuracies,
-                               mobilenet_se_bifpn_lrs,
-                               'MobileNetV4', 'MobileNetV4-SE-FPN', 'MobileNetV4-SE-BiFPN', 'MobileNetV4优化：')
+#
+# # MobileNetV4优化对比
+# plot_comparison_and_difference(mobilenet_epochs, mobilenet_val_losses, mobilenet_val_accuracies, mobilenet_lrs,
+#                                mobilenet_se_fpn_epochs, mobilenet_se_fpn_val_losses, mobilenet_se_fpn_val_accuracies,
+#                                mobilenet_se_fpn_lrs,
+#                                mobilenet_se_bifpn_epochs, mobilenet_se_bifpn_val_losses, mobilenet_se_bifpn_val_accuracies,
+#                                mobilenet_se_bifpn_lrs,
+#                                'MobileNetV4', 'MobileNetV4-SE-FPN', 'MobileNetV4-SE-BiFPN', 'MobileNetV4优化：')
 
 # 基座模型对比
 plot_comparison_and_difference(mobilenet_epochs, mobilenet_val_losses, mobilenet_val_accuracies, mobilenet_lrs,
                                ghostnet_epochs, ghostnet_val_losses, ghostnet_val_accuracies, ghostnet_lrs,
                                efficientnet_epochs, efficientnet_val_losses, efficientnet_val_accuracies, efficientnet_lrs,
-                               'MobileNetV4', 'GhostNet_v2', 'EfficientNet-B7', '基座模型：')
+                               'MobileNetV4', 'GhostNet-v2', 'EfficientNet-B2', '基座模型：')
